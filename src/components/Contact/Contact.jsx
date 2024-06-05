@@ -7,6 +7,34 @@ import call_icon from '../../assets/call_icon.svg'
 
 
 const Contact = () => {
+
+    const [result, setResult] = React.useState("");
+    
+
+    const onSubmit = async (event) => {
+      event.preventDefault();
+      setResult("Sending....");
+      const formData = new FormData(event.target);
+  
+      formData.append("access_key", "cabd9b7d-fa81-48e6-859e-5b16e59a5d40");
+  
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        setResult("Form Submitted Successfully");
+        event.target.reset();
+        alert("Submitted Successfully");
+      } else {
+        console.log("Error", data);
+        setResult(data.message);
+      }
+    };
+
   return (
     <div id='contact' className='contact'>
         <div className="contact-title">
@@ -29,7 +57,7 @@ const Contact = () => {
                     </div>
                 </div>
             </div>
-            <form  className="contact-right">
+            <form onSubmit={onSubmit} className="contact-right">
                 <label htmlFor=''>Your Name</label>
                 <input type='text' placeholder='Enter Your name' name="name"/>
                 <label htmlFor=''>Your Email</label>
